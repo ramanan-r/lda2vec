@@ -481,7 +481,7 @@ class Corpus():
         return words
 
     def compact_word_vectors(self, vocab, filename=None, array=None,
-                             top=20000):
+                             top=20000, use_levenshtein_distance = True):
         """ Retrieve pretrained word spectors for our vocabulary.
         The returned word array has row indices corresponding to the
         compact index of a word, and columns correponding to the word
@@ -499,6 +499,9 @@ class Corpus():
         filename : str
             Filename for SpaCy-compatible word vectors or if use_spacy=False
             then uses word2vec vectors via gensim.
+
+        use_levenshtein_distance : bool
+            To use levenshtein distance or not, when vector is None
 
         Returns
         -------
@@ -566,7 +569,7 @@ class Corpus():
                 if clean in model.vocab:
                     vector = model[clean]
                     break
-            if vector is None:
+            if use_levenshtein_distance and vector is None:
                 try:
                     word = unicode(word)
                     idx = lengths >= len(word) - 3
